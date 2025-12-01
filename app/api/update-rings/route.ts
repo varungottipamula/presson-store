@@ -68,10 +68,12 @@ export async function POST() {
 
         const updatedRings = await Promise.all(updatePromises);
 
+        const validRings = updatedRings.filter((r): r is NonNullable<typeof r> => r !== null);
+
         return NextResponse.json({
             success: true,
-            message: `Successfully updated ${updatedRings.length} ring products`,
-            updatedProducts: updatedRings.map(r => ({ id: r._id, name: r.name }))
+            message: `Successfully updated ${validRings.length} ring products`,
+            updatedProducts: validRings.map(r => ({ id: r._id, name: r.name }))
         });
 
     } catch (error) {

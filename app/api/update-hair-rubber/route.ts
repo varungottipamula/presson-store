@@ -48,10 +48,12 @@ export async function POST() {
 
         const updatedHairRubbers = await Promise.all(updatePromises);
 
+        const validHairRubbers = updatedHairRubbers.filter((h): h is NonNullable<typeof h> => h !== null);
+
         return NextResponse.json({
             success: true,
-            message: `Successfully updated ${updatedHairRubbers.length} hair-rubber products`,
-            updatedProducts: updatedHairRubbers.map(h => ({ id: h!._id, name: h!.name }))
+            message: `Successfully updated ${validHairRubbers.length} hair-rubber products`,
+            updatedProducts: validHairRubbers.map(h => ({ id: h._id, name: h.name }))
         });
 
     } catch (error) {

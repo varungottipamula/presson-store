@@ -98,10 +98,12 @@ export async function GET() {
 
         const updatedProducts = await Promise.all(updatePromises);
 
+        const validProducts = updatedProducts.filter((p): p is NonNullable<typeof p> => p !== null);
+
         return NextResponse.json({
             success: true,
-            message: `Successfully updated ${updatedProducts.length} hairclip products`,
-            products: updatedProducts.map(p => ({
+            message: `Successfully updated ${validProducts.length} hairclip products`,
+            products: validProducts.map(p => ({
                 id: p._id,
                 name: p.name,
                 description: p.description,

@@ -37,15 +37,15 @@ export async function POST() {
         });
 
         const updatedProducts = await Promise.all(updatePromises);
-        const successCount = updatedProducts.filter(p => p !== null).length;
+        const validProducts = updatedProducts.filter((p): p is NonNullable<typeof p> => p !== null);
 
         return NextResponse.json({
             success: true,
-            message: `Successfully updated ${successCount} products to hairtie category`,
-            updatedProducts: updatedProducts.filter(p => p !== null).map(p => ({
-                id: p!._id,
-                name: p!.name,
-                category: p!.category
+            message: `Successfully updated ${validProducts.length} products to hairtie category`,
+            updatedProducts: validProducts.map(p => ({
+                id: p._id,
+                name: p.name,
+                category: p.category
             }))
         });
 

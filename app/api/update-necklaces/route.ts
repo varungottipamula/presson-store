@@ -56,10 +56,12 @@ export async function POST() {
 
         const updatedNecklaces = await Promise.all(updatePromises);
 
+        const validNecklaces = updatedNecklaces.filter((n): n is NonNullable<typeof n> => n !== null);
+
         return NextResponse.json({
             success: true,
-            message: `Successfully updated ${updatedNecklaces.length} necklace products`,
-            updatedProducts: updatedNecklaces.map(n => ({ id: n._id, name: n.name }))
+            message: `Successfully updated ${validNecklaces.length} necklace products`,
+            updatedProducts: validNecklaces.map(n => ({ id: n._id, name: n.name }))
         });
 
     } catch (error) {
