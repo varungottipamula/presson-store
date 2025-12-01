@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({
             success: true,
             message: 'Booking created successfully',
-            bookingId: booking._id,
+            bookingId: (booking as any)._id,
         });
     } catch (error) {
         console.error('Error creating booking:', error);
