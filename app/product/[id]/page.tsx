@@ -1,0 +1,108 @@
+import { notFound } from 'next/navigation';
+import dbConnect from '@/lib/db';
+import Product from '@/models/Product';
+import AddToCartButton from '../../../components/AddToCartButton';
+
+interface ProductPageProps {
+    params: Promise<{
+        id: string;
+    }>;
+}
+
+export default async function ProductPage({ params }: ProductPageProps) {
+    const { id } = await params;
+
+    await dbConnect();
+    let product;
+    try {
+        product = await Product.findById(id);
+    } catch (e) {
+        notFound();
+    }
+
+    if (!product) {
+        notFound();
+    }
+
+    // Serialize
+    const serializedProduct = {
+        ...(product.toObject() as any),
+        _id: product._id.toString(),
+        createdAt: product.createdAt.toISOString(),
+        updatedAt: product.updatedAt.toISOString(),
+    };
+
+    return (
+        <div className="container mx-auto px-4 py-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                {/* Image Gallery */}
+                <div className="space-y-4">
+                    <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden">
+                        {serializedProduct.images[0] ? (
+                            <img
+                                src={serializedProduct.images[0]}
+                                alt={serializedProduct.name}
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
+                        )}
+                    </div>
+                    <div className="grid grid-cols-4 gap-4">
+                        {serializedProduct.images.slice(1).map((img: string, idx: number) => (
+                            <div key={idx} className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                                <img src={img} alt={`${serializedProduct.name} ${idx + 2}`} className="w-full h-full object-cover" />
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Product Info */}
+                <div className="space-y-8">
+                    <div>
+                        <h1 className="text-4xl font-bold mb-2">{serializedProduct.name}</h1>
+                        <div className="flex items-end gap-3 mb-2">
+                            <p className="text-3xl font-black text-primary">₹{serializedProduct.price.toLocaleString()}</p>
+                            {serializedProduct.originalPrice && serializedProduct.originalPrice > serializedProduct.price && (
+                                <div className="flex items-end gap-2 mb-1">
+                                    <p className="text-xl text-gray-400 line-through">
+                                        ₹{serializedProduct.originalPrice.toLocaleString()}
+                                    </p>
+                                    <span className="text-lg font-bold text-red-500">
+                                        -{Math.round(((serializedProduct.originalPrice - serializedProduct.price) / serializedProduct.originalPrice) * 100)}%
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                        {serializedProduct.originalPrice && serializedProduct.originalPrice > serializedProduct.price && (
+                            <p className="text-sm text-green-600 font-medium">
+                                You Save: ₹{(serializedProduct.originalPrice - serializedProduct.price).toLocaleString()}
+                            </p>
+                        )}
+                    </div>
+
+                    <div className="prose prose-sm text-muted-foreground">
+                        <p>{serializedProduct.description}</p>
+                    </div>
+
+                    <AddToCartButton product={serializedProduct} />
+
+                    <div className="border-t pt-6 space-y-4">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <span className="font-medium text-foreground">Category:</span>
+                            <span className="capitalize">{serializedProduct.category}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <span className="font-medium text-foreground">Availability:</span>
+                            {serializedProduct.stock > 0 ? (
+                                <span className="text-green-600">In Stock ({serializedProduct.stock})</span>
+                            ) : (
+                                <span className="text-red-600">Out of Stock</span>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
