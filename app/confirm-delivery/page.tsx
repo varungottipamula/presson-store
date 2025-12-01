@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { CheckCircle, XCircle, Loader2 } from 'lucide-react';
 
-export default function ConfirmDeliveryPage() {
+function ConfirmDeliveryContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -88,5 +88,17 @@ export default function ConfirmDeliveryPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function ConfirmDeliveryPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen flex items-center justify-center bg-gray-50">
+                <Loader2 className="h-10 w-10 text-pink-500 animate-spin" />
+            </div>
+        }>
+            <ConfirmDeliveryContent />
+        </Suspense>
     );
 }
