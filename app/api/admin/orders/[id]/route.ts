@@ -5,13 +5,13 @@ import crypto from 'crypto';
 
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbConnect();
 
         const { status, paymentStatus } = await req.json();
-        const { id } = params;
+        const { id } = await params;
 
         const updateData: Record<string, string> = {};
         if (status) updateData.status = status;

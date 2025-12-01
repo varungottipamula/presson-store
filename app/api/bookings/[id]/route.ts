@@ -4,13 +4,13 @@ import Booking from '@/models/Booking';
 
 export async function PATCH(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         await dbConnect();
 
         const { status } = await req.json();
-        const { id } = params;
+        const { id } = await params;
 
         console.log('Updating booking:', id, 'to status:', status);
 
