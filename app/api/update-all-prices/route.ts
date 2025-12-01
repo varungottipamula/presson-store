@@ -39,15 +39,17 @@ export async function GET() {
 
         const updatedProducts = await Promise.all(updatePromises);
 
+        const validProducts = updatedProducts.filter((p): p is NonNullable<typeof p> => p !== null);
+
         // Calculate statistics
         const stats = {
-            totalProducts: updatedProducts.length,
+            totalProducts: validProducts.length,
             averageDiscount: 0,
             minDiscount: 100,
             maxDiscount: 0
         };
 
-        updatedProducts.forEach(product => {
+        validProducts.forEach(product => {
             if (product.originalPrice && product.originalPrice > 0) {
                 const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
                 stats.averageDiscount += discount;
@@ -56,13 +58,13 @@ export async function GET() {
             }
         });
 
-        stats.averageDiscount = Math.round(stats.averageDiscount / updatedProducts.length);
+        stats.averageDiscount = Math.round(stats.averageDiscount / (validProducts.length || 1));
 
         return NextResponse.json({
             success: true,
-            message: `Successfully updated ${updatedProducts.length} products with discount pricing`,
+            message: `Successfully updated ${validProducts.length} products with discount pricing`,
             stats,
-            sampleProducts: updatedProducts.slice(0, 5).map(p => ({
+            sampleProducts: validProducts.slice(0, 5).map(p => ({
                 name: p.name,
                 category: p.category,
                 originalPrice: p.originalPrice,
