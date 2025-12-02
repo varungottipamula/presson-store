@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 import AddToCartButton from '../../../components/AddToCartButton';
+import ProductImage from '@/components/ProductImage';
 
 interface ProductPageProps {
     params: Promise<{
@@ -39,7 +40,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 <div className="space-y-4">
                     <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden">
                         {serializedProduct.images && serializedProduct.images[0] ? (
-                            <img
+                            <ProductImage
                                 src={serializedProduct.images[0]}
                                 alt={serializedProduct.name}
                                 className="w-full h-full object-cover"
@@ -51,7 +52,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     <div className="grid grid-cols-4 gap-4">
                         {(serializedProduct.images || []).slice(1).map((img: string, idx: number) => (
                             <div key={idx} className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
-                                <img src={img} alt={`${serializedProduct.name} ${idx + 2}`} className="w-full h-full object-cover" />
+                                <ProductImage src={img} alt={`${serializedProduct.name} ${idx + 2}`} className="w-full h-full object-cover" />
                             </div>
                         ))}
                     </div>

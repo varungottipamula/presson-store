@@ -1,6 +1,7 @@
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 import Link from 'next/link';
+import ProductImage from '@/components/ProductImage';
 
 export default async function AllProductsPage() {
     await dbConnect();
@@ -48,8 +49,8 @@ export default async function AllProductsPage() {
                                 >
                                     <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
                                         <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
-                                            <img
-                                                src={product.images[0] || 'https://via.placeholder.com/400'}
+                                            <ProductImage
+                                                src={product.images[0]}
                                                 alt={product.name}
                                                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                             />

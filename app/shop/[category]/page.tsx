@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 import Link from 'next/link';
+import ProductImage from '@/components/ProductImage';
 
 interface ShopCategoryPageProps {
     params: Promise<{
@@ -24,12 +25,17 @@ export default async function ShopCategoryPage({ params }: ShopCategoryPageProps
     await dbConnect();
 
     let products;
+    const baseFilter = {
+        price: { $gt: 0 },
+        images: { $exists: true, $not: { $size: 0 } }
+    };
+
     if (category === 'new-arrivals') {
-        products = await Product.find({}).sort({ createdAt: -1 }).limit(20);
+        products = await Product.find({ ...baseFilter }).sort({ createdAt: -1 }).limit(20);
     } else if (category === 'accessories') {
-        products = await Product.find({ category: { $ne: 'nails' } }).sort({ createdAt: -1 });
+        products = await Product.find({ ...baseFilter, category: { $ne: 'nails' } }).sort({ createdAt: -1 });
     } else {
-        products = await Product.find({ category }).sort({ createdAt: -1 });
+        products = await Product.find({ ...baseFilter, category }).sort({ createdAt: -1 });
     }
 
     // Serialize Mongoose documents to plain objects
@@ -73,8 +79,8 @@ export default async function ShopCategoryPage({ params }: ShopCategoryPageProps
                             >
                                 <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
                                     <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
-                                        <img
-                                            src={product.images[0] || 'https://via.placeholder.com/400'}
+                                        <ProductImage
+                                            src={product.images[0]}
                                             alt={product.name}
                                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                         />
