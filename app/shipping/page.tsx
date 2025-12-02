@@ -21,13 +21,13 @@ export default function ShippingPage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                         <div className="p-6 bg-pink-50 rounded-2xl text-center">
                             <Truck className="w-8 h-8 text-pink-500 mx-auto mb-3" />
-                            <h3 className="font-bold text-gray-900 mb-1">Free Shipping</h3>
-                            <p className="text-sm text-gray-600">On orders over ₹999</p>
+                            <h3 className="font-bold text-gray-900 mb-1">Flat Rate Shipping</h3>
+                            <p className="text-sm text-gray-600">₹99 on all orders</p>
                         </div>
                         <div className="p-6 bg-pink-50 rounded-2xl text-center">
                             <Clock className="w-8 h-8 text-pink-500 mx-auto mb-3" />
-                            <h3 className="font-bold text-gray-900 mb-1">Fast Delivery</h3>
-                            <p className="text-sm text-gray-600">3-5 business days</p>
+                            <h3 className="font-bold text-gray-900 mb-1">Standard Delivery</h3>
+                            <p className="text-sm text-gray-600">7-14 business days</p>
                         </div>
                         <div className="p-6 bg-pink-50 rounded-2xl text-center">
                             <Globe className="w-8 h-8 text-pink-500 mx-auto mb-3" />
@@ -59,13 +59,8 @@ export default function ShippingPage() {
                                 <tbody className="bg-white divide-y divide-gray-200">
                                     <tr>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Standard Shipping</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">3-5 business days</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₹49 (Free over ₹999)</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Express Shipping</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">1-2 business days</td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₹149</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">7-14 business days</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₹99</td>
                                     </tr>
                                 </tbody>
                             </table>

@@ -10,7 +10,15 @@ async function getBestSellers() {
     { $match: { category: 'nails' } },
     { $sample: { size: 4 } }
   ]);
-  return products;
+
+  // Serialize MongoDB documents
+  return (products || []).map(p => ({
+    ...p,
+    _id: p._id.toString(),
+    images: p.images || [],
+    createdAt: p.createdAt?.toISOString?.() || new Date().toISOString(),
+    updatedAt: p.updatedAt?.toISOString?.() || new Date().toISOString(),
+  }));
 }
 
 async function getCollectionProducts() {
@@ -20,16 +28,24 @@ async function getCollectionProducts() {
     { $match: { category: { $ne: 'nails' } } },
     { $sample: { size: 8 } }
   ]);
-  return products;
+
+  // Serialize MongoDB documents
+  return (products || []).map(p => ({
+    ...p,
+    _id: p._id.toString(),
+    images: p.images || [],
+    createdAt: p.createdAt?.toISOString?.() || new Date().toISOString(),
+    updatedAt: p.updatedAt?.toISOString?.() || new Date().toISOString(),
+  }));
 }
 
 export default async function Home() {
-  const bestSellers = await getBestSellers();
-  const collectionProducts = await getCollectionProducts();
+  const bestSellers = (await getBestSellers()) || [];
+  const collectionProducts = (await getCollectionProducts()) || [];
 
   const categories = [
     {
-      name: 'Nails',
+      name: 'Press on Nails',
       slug: 'nails',
       image: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&q=80&w=400',
     },
@@ -146,7 +162,7 @@ export default async function Home() {
                   <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
                     <div className="aspect-square bg-gradient-to-br from-pink-50 to-rose-50 relative overflow-hidden">
                       <img
-                        src={product.images[0] || 'https://via.placeholder.com/400'}
+                        src={product.images?.[0] || 'https://via.placeholder.com/400'}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
@@ -161,15 +177,15 @@ export default async function Home() {
                       <h3 className="font-bold text-gray-900 mb-2 text-base line-clamp-2">{product.name}</h3>
                       <div className="flex items-center justify-center gap-2">
                         <p className="text-xl font-black text-gray-900">
-                          ₹{product.price.toLocaleString()}
+                          ₹{(product.price || 0).toLocaleString()}
                         </p>
-                        {product.originalPrice && product.originalPrice > product.price && (
+                        {product.originalPrice && product.price && product.originalPrice > product.price && (
                           <>
                             <p className="text-sm text-gray-400 line-through">
-                              ₹{product.originalPrice.toLocaleString()}
+                              ₹{(product.originalPrice || 0).toLocaleString()}
                             </p>
                             <span className="text-xs font-bold text-red-500">
-                              -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                              -{Math.round((((product.originalPrice || 0) - (product.price || 0)) / (product.originalPrice || 1)) * 100)}%
                             </span>
                           </>
                         )}
@@ -212,7 +228,7 @@ export default async function Home() {
                 <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
                   <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
                     <img
-                      src={product.images[0] || 'https://via.placeholder.com/400'}
+                      src={product.images?.[0] || 'https://via.placeholder.com/400'}
                       alt={product.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -227,15 +243,15 @@ export default async function Home() {
                     <h3 className="font-bold text-gray-900 mb-2 text-base line-clamp-2">{product.name}</h3>
                     <div className="flex items-center justify-center gap-2">
                       <p className="text-xl font-black text-gray-900">
-                        ₹{product.price.toLocaleString()}
+                        ₹{(product.price || 0).toLocaleString()}
                       </p>
-                      {product.originalPrice && product.originalPrice > product.price && (
+                      {product.originalPrice && product.price && product.originalPrice > product.price && (
                         <>
                           <p className="text-sm text-gray-400 line-through">
-                            ₹{product.originalPrice.toLocaleString()}
+                            ₹{(product.originalPrice || 0).toLocaleString()}
                           </p>
                           <span className="text-xs font-bold text-red-500">
-                            -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                            -{Math.round((((product.originalPrice || 0) - (product.price || 0)) / (product.originalPrice || 1)) * 100)}%
                           </span>
                         </>
                       )}
@@ -287,23 +303,23 @@ export default async function Home() {
               <div className="w-16 h-16 mx-auto bg-gradient-to-br from-pink-400 to-rose-400 rounded-full flex items-center justify-center">
                 <Package className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900">FREE SHIPPING</h3>
-              <p className="text-gray-600">On all orders across India</p>
-            </div>
-
-            <div className="text-center space-y-3">
-              <div className="w-16 h-16 mx-auto bg-gradient-to-br from-pink-400 to-rose-400 rounded-full flex items-center justify-center">
-                <Check className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900">COD AVAILABLE</h3>
-              <p className="text-gray-600">Cash on delivery option</p>
+              <h3 className="text-xl font-bold text-gray-900">FLAT RATE SHIPPING</h3>
+              <p className="text-gray-600">₹99 on all orders</p>
             </div>
 
             <div className="text-center space-y-3">
               <div className="w-16 h-16 mx-auto bg-gradient-to-br from-pink-400 to-rose-400 rounded-full flex items-center justify-center">
                 <Shield className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900">100% Quality Guarantee</h3>
+              <h3 className="text-xl font-bold text-gray-900">SECURE PAYMENT</h3>
+              <p className="text-gray-600">100% Secure Online Payment</p>
+            </div>
+
+            <div className="text-center space-y-3">
+              <div className="w-16 h-16 mx-auto bg-gradient-to-br from-pink-400 to-rose-400 rounded-full flex items-center justify-center">
+                <Check className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900">Quality Guarantee</h3>
               <p className="text-gray-600">Premium quality assured</p>
             </div>
           </div>

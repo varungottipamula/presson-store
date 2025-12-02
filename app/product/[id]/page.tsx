@@ -38,7 +38,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                 {/* Image Gallery */}
                 <div className="space-y-4">
                     <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden">
-                        {serializedProduct.images[0] ? (
+                        {serializedProduct.images && serializedProduct.images[0] ? (
                             <img
                                 src={serializedProduct.images[0]}
                                 alt={serializedProduct.name}
@@ -49,7 +49,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
                         )}
                     </div>
                     <div className="grid grid-cols-4 gap-4">
-                        {serializedProduct.images.slice(1).map((img: string, idx: number) => (
+                        {(serializedProduct.images || []).slice(1).map((img: string, idx: number) => (
                             <div key={idx} className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
                                 <img src={img} alt={`${serializedProduct.name} ${idx + 2}`} className="w-full h-full object-cover" />
                             </div>
@@ -62,21 +62,21 @@ export default async function ProductPage({ params }: ProductPageProps) {
                     <div>
                         <h1 className="text-4xl font-bold mb-2">{serializedProduct.name}</h1>
                         <div className="flex items-end gap-3 mb-2">
-                            <p className="text-3xl font-black text-primary">₹{serializedProduct.price.toLocaleString()}</p>
-                            {serializedProduct.originalPrice && serializedProduct.originalPrice > serializedProduct.price && (
+                            <p className="text-3xl font-black text-primary">₹{(serializedProduct.price || 0).toLocaleString()}</p>
+                            {serializedProduct.originalPrice && serializedProduct.price && serializedProduct.originalPrice > serializedProduct.price && (
                                 <div className="flex items-end gap-2 mb-1">
                                     <p className="text-xl text-gray-400 line-through">
-                                        ₹{serializedProduct.originalPrice.toLocaleString()}
+                                        ₹{(serializedProduct.originalPrice || 0).toLocaleString()}
                                     </p>
                                     <span className="text-lg font-bold text-red-500">
-                                        -{Math.round(((serializedProduct.originalPrice - serializedProduct.price) / serializedProduct.originalPrice) * 100)}%
+                                        -{Math.round((((serializedProduct.originalPrice || 0) - (serializedProduct.price || 0)) / (serializedProduct.originalPrice || 1)) * 100)}%
                                     </span>
                                 </div>
                             )}
                         </div>
-                        {serializedProduct.originalPrice && serializedProduct.originalPrice > serializedProduct.price && (
+                        {serializedProduct.originalPrice && serializedProduct.price && serializedProduct.originalPrice > serializedProduct.price && (
                             <p className="text-sm text-green-600 font-medium">
-                                You Save: ₹{(serializedProduct.originalPrice - serializedProduct.price).toLocaleString()}
+                                You Save: ₹{((serializedProduct.originalPrice || 0) - (serializedProduct.price || 0)).toLocaleString()}
                             </p>
                         )}
                     </div>
@@ -99,6 +99,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
                             ) : (
                                 <span className="text-red-600">Out of Stock</span>
                             )}
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <span className="font-medium text-foreground">Delivery:</span>
+                            <span>7 to 14 days</span>
                         </div>
                     </div>
                 </div>

@@ -33,7 +33,7 @@ export default async function ShopCategoryPage({ params }: ShopCategoryPageProps
     }
 
     // Serialize Mongoose documents to plain objects
-    const serializedProducts = products.map((doc) => {
+    const serializedProducts = (products || []).map((doc) => {
         const product = doc.toObject() as any;
         product._id = product._id.toString();
         product.createdAt = product.createdAt.toISOString();
@@ -93,15 +93,15 @@ export default async function ShopCategoryPage({ params }: ShopCategoryPageProps
                                         </h3>
                                         <div className="flex items-center justify-center gap-2">
                                             <p className="text-xl font-black text-gray-900">
-                                                ₹{product.price.toLocaleString()}
+                                                ₹{(product.price || 0).toLocaleString()}
                                             </p>
-                                            {product.originalPrice && product.originalPrice > product.price && (
+                                            {product.originalPrice && product.price && product.originalPrice > product.price && (
                                                 <>
                                                     <p className="text-sm text-gray-400 line-through">
-                                                        ₹{product.originalPrice.toLocaleString()}
+                                                        ₹{(product.originalPrice || 0).toLocaleString()}
                                                     </p>
                                                     <span className="text-xs font-bold text-red-500">
-                                                        -{Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}%
+                                                        -{Math.round((((product.originalPrice || 0) - (product.price || 0)) / (product.originalPrice || 1)) * 100)}%
                                                     </span>
                                                 </>
                                             )}

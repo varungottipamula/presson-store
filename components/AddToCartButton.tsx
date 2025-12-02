@@ -17,6 +17,7 @@ export default function AddToCartButton({ product }: { product: any }) {
             image: product.images[0] || '',
             quantity: 1,
             size: selectedSize,
+            category: product.category,
         });
         setIsAdded(true);
         setTimeout(() => setIsAdded(false), 2000);

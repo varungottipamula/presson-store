@@ -27,7 +27,7 @@ export default function Footer() {
                         <ul className="space-y-2 text-sm">
                             <li><Link href="/contact" className="hover:text-primary">Contact Us</Link></li>
                             <li><Link href="/shipping" className="hover:text-primary">Shipping Policy</Link></li>
-                            <li><Link href="/returns" className="hover:text-primary">Returns & Exchanges</Link></li>
+                            <li><Link href="/returns" className="hover:text-primary">Exchanges</Link></li>
                         </ul>
                     </div>
 

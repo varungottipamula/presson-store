@@ -28,6 +28,26 @@ export default function CartPage() {
         );
     }
 
+    // Calculate Discount (Buy 3 Get 1 Free for Nails)
+    const nailItems = cart.filter(item => item.category === 'nails');
+    let discountAmount = 0;
+
+    if (nailItems.length > 0) {
+        // Expand items based on quantity
+        const allNails = nailItems.flatMap(item => Array(item.quantity).fill(item.price));
+        // Sort by price ascending
+        allNails.sort((a, b) => a - b);
+
+        // Every 4th item is free (the cheapest ones)
+        const freeItemsCount = Math.floor(allNails.length / 4);
+        for (let i = 0; i < freeItemsCount; i++) {
+            discountAmount += allNails[i];
+        }
+    }
+
+    const shippingCost = 99;
+    const finalTotal = cartTotal - discountAmount + shippingCost;
+
     return (
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
@@ -54,6 +74,7 @@ export default function CartPage() {
                                     <p className="text-sm text-muted-foreground">
                                         {item.size && `Size: ${item.size}`}
                                         {item.shape && ` • Shape: ${item.shape}`}
+                                        {item.category === 'nails' && <span className="ml-2 text-xs bg-pink-100 text-pink-600 px-2 py-0.5 rounded-full">Buy 3 Get 1 Free</span>}
                                     </p>
                                 </div>
                                 <div className="flex items-center justify-between mt-2">
@@ -97,15 +118,21 @@ export default function CartPage() {
                                 <span className="text-muted-foreground">Subtotal</span>
                                 <span>₹{cartTotal}</span>
                             </div>
+                            {discountAmount > 0 && (
+                                <div className="flex justify-between text-green-600">
+                                    <span>Discount (Buy 3 Get 1 Free)</span>
+                                    <span>-₹{discountAmount}</span>
+                                </div>
+                            )}
                             <div className="flex justify-between">
                                 <span className="text-muted-foreground">Shipping</span>
-                                <span>Free</span>
+                                <span>₹{shippingCost}</span>
                             </div>
                         </div>
                         <div className="border-t pt-4 mb-6">
                             <div className="flex justify-between font-bold text-lg">
                                 <span>Total</span>
-                                <span>₹{cartTotal}</span>
+                                <span>₹{finalTotal}</span>
                             </div>
                         </div>
                         <button

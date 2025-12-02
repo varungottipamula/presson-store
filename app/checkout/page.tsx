@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
-import { CreditCard, Truck } from 'lucide-react';
+import { CreditCard } from 'lucide-react';
 
 declare global {
     interface Window {
@@ -15,7 +15,7 @@ declare global {
 export default function CheckoutPage() {
     const router = useRouter();
     const { cart, cartTotal, clearCart } = useCart();
-    const [paymentMethod, setPaymentMethod] = useState<'online' | 'cod'>('online');
+    const [paymentMethod, setPaymentMethod] = useState<'online'>('online');
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
@@ -50,6 +50,26 @@ export default function CheckoutPage() {
         return true;
     };
 
+    // Calculate Discount (Buy 3 Get 1 Free for Nails)
+    const nailItems = cart.filter(item => item.category === 'nails');
+    let discountAmount = 0;
+
+    if (nailItems.length > 0) {
+        // Expand items based on quantity
+        const allNails = nailItems.flatMap(item => Array(item.quantity).fill(item.price));
+        // Sort by price ascending
+        allNails.sort((a, b) => a - b);
+
+        // Every 4th item is free (the cheapest ones)
+        const freeItemsCount = Math.floor(allNails.length / 4);
+        for (let i = 0; i < freeItemsCount; i++) {
+            discountAmount += allNails[i];
+        }
+    }
+
+    const shippingCost = 99;
+    const finalTotal = cartTotal - discountAmount + shippingCost;
+
     const handleOnlinePayment = async () => {
         if (!validateForm()) return;
 
@@ -60,7 +80,7 @@ export default function CheckoutPage() {
             const orderRes = await fetch('/api/payment/create-order', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ amount: cartTotal }),
+                body: JSON.stringify({ amount: finalTotal }),
             });
 
             const orderData = await orderRes.json();
@@ -102,7 +122,9 @@ export default function CheckoutPage() {
                                     price: item.price,
                                     size: item.size,
                                 })),
-                                totalAmount: cartTotal,
+                                totalAmount: finalTotal,
+                                discount: discountAmount,
+                                shipping: shippingCost
                             },
                         }),
                     });
@@ -137,58 +159,9 @@ export default function CheckoutPage() {
         }
     };
 
-    const handleCOD = async () => {
-        if (!validateForm()) return;
-
-        setLoading(true);
-
-        try {
-            const res = await fetch('/api/orders/create', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    user: {
-                        name: formData.name,
-                        email: formData.email,
-                        phone: formData.phone,
-                        address: `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
-                    },
-                    products: cart.map(item => ({
-                        product: item.id,
-                        name: item.name,
-                        quantity: item.quantity,
-                        price: item.price,
-                        size: item.size,
-                    })),
-                    totalAmount: cartTotal,
-                    paymentMethod: 'cod',
-                }),
-            });
-
-            const data = await res.json();
-
-            if (data.success) {
-                clearCart();
-                alert('Order placed successfully! You can pay on delivery.');
-                router.push('/');
-            } else {
-                alert('Failed to place order');
-            }
-        } catch (error) {
-            console.error('Order error:', error);
-            alert('Failed to place order. Please try again.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (paymentMethod === 'online') {
-            handleOnlinePayment();
-        } else {
-            handleCOD();
-        }
+        handleOnlinePayment();
     };
 
     if (cart.length === 0) {
@@ -336,28 +309,6 @@ export default function CheckoutPage() {
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div
-                                        onClick={() => setPaymentMethod('cod')}
-                                        className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${paymentMethod === 'cod'
-                                            ? 'border-pink-500 bg-pink-50'
-                                            : 'border-gray-200 hover:border-gray-300'
-                                            }`}
-                                    >
-                                        <div className="flex items-center gap-3">
-                                            <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${paymentMethod === 'cod' ? 'border-pink-500' : 'border-gray-300'
-                                                }`}>
-                                                {paymentMethod === 'cod' && (
-                                                    <div className="w-3 h-3 rounded-full bg-pink-500"></div>
-                                                )}
-                                            </div>
-                                            <Truck className="w-5 h-5 text-gray-700" />
-                                            <div>
-                                                <p className="font-bold text-gray-900">Cash on Delivery</p>
-                                                <p className="text-xs text-gray-600">Pay when you receive</p>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
@@ -366,7 +317,7 @@ export default function CheckoutPage() {
                                 disabled={loading}
                                 className="w-full py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white font-bold rounded-xl hover:shadow-lg hover:scale-[1.02] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                             >
-                                {loading ? 'Processing...' : paymentMethod === 'online' ? 'Pay Now' : 'Place Order'}
+                                {loading ? 'Processing...' : 'Pay Now'}
                             </button>
                         </form>
                     </div>
@@ -394,13 +345,19 @@ export default function CheckoutPage() {
                                     <span>Subtotal</span>
                                     <span>₹{cartTotal}</span>
                                 </div>
+                                {discountAmount > 0 && (
+                                    <div className="flex justify-between text-green-600">
+                                        <span>Discount</span>
+                                        <span>-₹{discountAmount}</span>
+                                    </div>
+                                )}
                                 <div className="flex justify-between text-gray-700">
                                     <span>Shipping</span>
-                                    <span className="text-green-600 font-medium">Free</span>
+                                    <span className="text-gray-900 font-medium">₹{shippingCost}</span>
                                 </div>
                                 <div className="flex justify-between text-lg font-bold text-gray-900 pt-2 border-t border-gray-200">
                                     <span>Total</span>
-                                    <span>₹{cartTotal}</span>
+                                    <span>₹{finalTotal}</span>
                                 </div>
                             </div>
                         </div>

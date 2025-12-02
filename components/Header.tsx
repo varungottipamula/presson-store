@@ -13,7 +13,7 @@ export default function Header() {
     const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
     const categories = [
-        { name: 'Nails', slug: 'nails' },
+        { name: 'Press on Nails', slug: 'nails' },
         { name: 'Bag', slug: 'bag' },
         { name: 'Watch', slug: 'watch' },
         { name: 'Bracelet', slug: 'bracelet' },

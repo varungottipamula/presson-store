@@ -31,16 +31,7 @@ export default function ContactPage() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-start gap-4">
-                                    <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <Phone className="w-6 h-6 text-pink-500" />
-                                    </div>
-                                    <div>
-                                        <h4 className="font-bold text-gray-900 mb-1">Phone</h4>
-                                        <p className="text-gray-600">+91 70450 61733</p>
-                                        <p className="text-sm text-gray-500">Mon-Sat from 10am to 8pm</p>
-                                    </div>
-                                </div>
+                                {/* Phone section removed as per request */}
 
                                 <div className="flex items-start gap-4">
                                     <div className="w-12 h-12 bg-pink-100 rounded-full flex items-center justify-center flex-shrink-0">
