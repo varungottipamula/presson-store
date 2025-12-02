@@ -1,29 +1,27 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
+import { nails } from '@/data/nails';
 
 export async function GET() {
     try {
         await dbConnect();
 
-        const products = [];
 
-        // Generate all 53 products
-        for (let i = 1; i <= 53; i++) {
-            const product = {
-                name: `Elegant Press-on Nails Style ${i}`,
-                description: "Handcrafted, premium quality press-on nails. Easy to apply, reusable, and designed for a salon-perfect look in minutes. Includes adhesive tabs and mini file.",
-                price: 499, // Default price
-                originalPrice: 999, // Original price for discount display (499 + 500)
-                category: "nails",
-                images: [`/nails/nail${i}.jpg`], // Path to the uploaded image
-                stock: 50,
-                sizes: ["XS", "S", "M", "L"],
-                shapes: ["Almond", "Coffin", "Square", "Stiletto"],
-                isFeatured: i <= 8, // Feature the first 8
-            };
-            products.push(product);
-        }
+
+        // Generate all 53 products from data file
+        const products = nails.map(nail => ({
+            name: nail.name,
+            description: nail.description,
+            price: nail.price,
+            originalPrice: nail.originalPrice,
+            category: nail.category,
+            images: nail.images,
+            stock: nail.stock,
+            sizes: nail.sizes,
+            shapes: nail.shapes,
+            isFeatured: nail.isFeatured,
+        }));
 
         // Insert into database
         // Use insertMany for bulk insertion
