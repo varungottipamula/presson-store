@@ -6,10 +6,17 @@ import Product from '@/models/Product';
 
 async function getBestSellers() {
   await dbConnect();
-  // Get random products from nails category only
+  // Get random products from nails category only, ensuring valid price and images
   const products = await Product.aggregate([
-    { $match: { category: 'nails' } },
-    { $sample: { size: 4 } }
+    {
+      $match: {
+        category: 'nails',
+        price: { $gt: 0 },
+        images: { $exists: true, $type: 'array', $ne: [] },
+        'images.0': { $exists: true, $ne: null, $ne: "" }
+      }
+    },
+    { $sample: { size: 12 } }
   ]);
 
   // Serialize MongoDB documents
@@ -24,10 +31,17 @@ async function getBestSellers() {
 
 async function getCollectionProducts() {
   await dbConnect();
-  // Get random products from different categories (excluding nails)
+  // Get random products from different categories (excluding nails and earrings), ensuring valid price and images
   const products = await Product.aggregate([
-    { $match: { category: { $ne: 'nails' } } },
-    { $sample: { size: 8 } }
+    {
+      $match: {
+        category: { $nin: ['nails', 'earrings'] },
+        price: { $gt: 0 },
+        images: { $exists: true, $type: 'array', $ne: [] },
+        'images.0': { $exists: true, $ne: null, $ne: "" }
+      }
+    },
+    { $sample: { size: 12 } }
   ]);
 
   // Serialize MongoDB documents
@@ -81,11 +95,6 @@ export default async function Home() {
       image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=400',
     },
     {
-      name: 'Earrings',
-      slug: 'earrings',
-      image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&q=80&w=400',
-    },
-    {
       name: 'Glasses',
       slug: 'glasses',
       image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&q=80&w=400',
@@ -129,7 +138,7 @@ export default async function Home() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link
-                href="/shop/nails"
+                href="/shop"
                 className="group px-8 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-full font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg"
               >
                 Shop Now
@@ -174,7 +183,9 @@ export default async function Home() {
                       )}
                     </div>
                     <div className="p-5 text-center">
-                      <p className="text-xs text-rose-500 font-semibold mb-1 uppercase tracking-wider">{product.category}</p>
+                      <p className="text-xs text-rose-500 font-semibold mb-1 uppercase tracking-wider">
+                        {product.category === 'nails' ? 'Press on Nails' : product.category}
+                      </p>
                       <h3 className="font-bold text-gray-900 mb-2 text-base line-clamp-2">{product.name}</h3>
                       <div className="flex items-center justify-center gap-2">
                         <p className="text-xl font-black text-gray-900">
@@ -240,7 +251,9 @@ export default async function Home() {
                     )}
                   </div>
                   <div className="p-5 text-center">
-                    <p className="text-xs text-rose-500 font-semibold mb-1 uppercase tracking-wider">{product.category}</p>
+                    <p className="text-xs text-rose-500 font-semibold mb-1 uppercase tracking-wider">
+                      {product.category === 'nails' ? 'Press on Nails' : product.category}
+                    </p>
                     <h3 className="font-bold text-gray-900 mb-2 text-base line-clamp-2">{product.name}</h3>
                     <div className="flex items-center justify-center gap-2">
                       <p className="text-xl font-black text-gray-900">
@@ -265,7 +278,7 @@ export default async function Home() {
 
           <div className="text-center mt-12">
             <Link
-              href="/shop/nails"
+              href="/shop"
               className="inline-flex items-center gap-2 px-8 py-3 bg-gray-900 text-white rounded-full font-bold text-base hover:bg-gray-800 transition-all"
             >
               View All Products <ArrowRight className="w-5 h-5" />
