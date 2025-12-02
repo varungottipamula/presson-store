@@ -14,6 +14,7 @@ export async function GET() {
                 name: `Colorful Hair Rubber Set ${i}`,
                 description: "Durable and stretchy hair rubber bands. Perfect for creating ponytails and updos. Gentle on hair with no snag design.",
                 price: 149, // Default price for hair rubbers
+                originalPrice: 649,
                 category: "hair-rubber",
                 images: [`/hairrubber/rubber${i}.jpg`],
                 stock: 60,

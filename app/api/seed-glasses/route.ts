@@ -14,6 +14,7 @@ export async function GET() {
                 name: `Trendy Glasses Style ${i}`,
                 description: "Fashionable eyewear with UV protection. Perfect blend of style and functionality. Lightweight frame for comfortable all-day wear.",
                 price: 1299, // Default price for glasses
+                originalPrice: 1799,
                 category: "glasses",
                 images: [`/glasses/glass${i}.jpg`],
                 stock: 15,

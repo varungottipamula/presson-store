@@ -17,6 +17,7 @@ export async function GET() {
                 name: `Luxury Timepiece Style ${i}`,
                 description: "Elegant and precise quartz movement watch. Features a durable strap and water-resistant casing. A perfect blend of style and functionality.",
                 price: 1499, // Default price for watches
+                originalPrice: 1999,
                 category: "watch",
                 images: [`/watches/watch${i}.${extension}`],
                 stock: 15,

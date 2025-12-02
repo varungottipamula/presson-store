@@ -14,6 +14,7 @@ export async function GET() {
                 name: `Stylish Hair Tie Set ${i}`,
                 description: "Premium quality hair ties designed for comfort and style. Perfect for all hair types. Gentle on hair, no pulling or breakage.",
                 price: 199, // Default price for hair ties
+                originalPrice: 699,
                 category: "hair-tie",
                 images: [`/hairtie/tie${i}.jpg`],
                 stock: 50,

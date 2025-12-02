@@ -14,6 +14,7 @@ export async function GET() {
                 name: `Premium Designer Bag Style ${i}`,
                 description: "Elegant and spacious designer bag, perfect for any occasion. Crafted with high-quality materials for durability and style.",
                 price: 999, // Default price for bags
+                originalPrice: 1499,
                 category: "bag", // Matches the slug in page.tsx
                 images: [`/bags/bag${i}.jpg`], // Path to the uploaded image
                 stock: 20,

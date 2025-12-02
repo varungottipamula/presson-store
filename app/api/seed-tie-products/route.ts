@@ -14,6 +14,7 @@ export async function GET() {
                 name: `Hair Tie Style ${i}`,
                 description: "Stylish and comfortable hair tie, perfect for everyday wear. High-quality elastic for secure hold without damage.",
                 price: 99,
+                originalPrice: 599,
                 category: "hairclip",
                 images: [`/hairclip/tie${i}.jpg`],
                 stock: 30,

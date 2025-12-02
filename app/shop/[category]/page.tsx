@@ -70,6 +70,37 @@ export default async function ShopCategoryPage({ params }: ShopCategoryPageProps
 
             {/* Products Grid */}
             <div className="container mx-auto px-4 py-12">
+                {/* Special Offer Banner for Nails */}
+                {category === 'nails' && (
+                    <div className="mb-12 relative overflow-hidden rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-rose-500 text-white shadow-xl">
+                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                        <div className="relative px-8 py-10 text-center md:px-12">
+                            <div className="inline-block mb-4 rounded-full bg-white/20 px-4 py-1.5 text-sm font-bold backdrop-blur-sm">
+                                ✨ Special Offer
+                            </div>
+                            <h2 className="mb-4 text-3xl font-black md:text-5xl font-[family-name:var(--font-playfair)]">
+                                Buy 3 Get 1 FREE! 💅
+                            </h2>
+                            <p className="text-lg font-medium text-pink-100 md:text-xl">
+                                Add any 4 nail sets to your cart and the cheapest one is on us!
+                            </p>
+                            <div className="mt-6 flex justify-center gap-2 text-sm font-medium text-pink-100">
+                                <span className="flex items-center gap-1">
+                                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Automatic Discount
+                                </span>
+                                <span className="flex items-center gap-1">
+                                    <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Limited Time
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {serializedProducts.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
                         {serializedProducts.map((product) => (

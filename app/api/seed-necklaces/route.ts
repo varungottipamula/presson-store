@@ -14,6 +14,7 @@ export async function GET() {
                 name: `Elegant Necklace Style ${i}`,
                 description: "Stunning necklace with exquisite craftsmanship. Perfect for adding a touch of elegance to any outfit. Adjustable chain length.",
                 price: 899, // Default price for necklaces
+                originalPrice: 1399,
                 category: "necklace",
                 images: [`/necklaces/necklace${i}.jpg`],
                 stock: 20,

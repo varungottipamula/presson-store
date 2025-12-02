@@ -16,6 +16,7 @@ export async function GET() {
                 name: `Elegant Bracelet Style ${i}`,
                 description: "Beautifully crafted bracelet with intricate design. Perfect accessory to complement any outfit. Adjustable fit for comfort.",
                 price: 799, // Default price for bracelets
+                originalPrice: 1299,
                 category: "bracelet",
                 images: [`/braclets/braclet${i}.jpg`],
                 stock: 25,

@@ -14,6 +14,7 @@ export async function GET() {
                 name: `Stylish Phone Cover Design ${i}`,
                 description: "Trendy phone cover with unique design. Provides excellent protection while adding style to your device. Compatible with multiple phone models.",
                 price: 399, // Default price for phone covers
+                originalPrice: 899,
                 category: "phone-cover",
                 images: [`/phone covers/cover${i}.jpg`],
                 stock: 40,

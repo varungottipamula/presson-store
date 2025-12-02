@@ -8,12 +8,13 @@ export async function GET() {
 
         const products = [];
 
-        // Generate 29 products
-        for (let i = 1; i <= 29; i++) {
+        // Generate all 53 products
+        for (let i = 1; i <= 53; i++) {
             const product = {
                 name: `Elegant Press-on Nails Style ${i}`,
                 description: "Handcrafted, premium quality press-on nails. Easy to apply, reusable, and designed for a salon-perfect look in minutes. Includes adhesive tabs and mini file.",
                 price: 499, // Default price
+                originalPrice: 999, // Original price for discount display (499 + 500)
                 category: "nails",
                 images: [`/nails/nail${i}.jpg`], // Path to the uploaded image
                 stock: 50,

@@ -14,6 +14,7 @@ export async function GET() {
                 name: `Beautiful Earrings Style ${i}`,
                 description: "Gorgeous earrings with stunning design. Perfect for adding sparkle to any look. Lightweight and comfortable for all-day wear.",
                 price: 699, // Default price for earrings
+                originalPrice: 1199,
                 category: "earrings",
                 images: [`/earrings/earring${i}.jpg`],
                 stock: 25,

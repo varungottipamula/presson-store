@@ -30,6 +30,14 @@ export async function POST(request: Request) {
     try {
         await dbConnect();
         const body = await request.json();
+
+        // Ensure originalPrice is set for discount display
+        if (!body.originalPrice && body.price) {
+            // Default logic: Set original price to be 500 more than selling price
+            // This ensures a consistent discount appearance
+            body.originalPrice = Number(body.price) + 500;
+        }
+
         const product = await Product.create(body);
         return NextResponse.json(product, { status: 201 });
     } catch (error) {

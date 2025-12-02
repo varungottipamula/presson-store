@@ -14,6 +14,7 @@ export async function GET() {
                 name: `Stunning Ring Style ${i}`,
                 description: "Exquisite ring with elegant design. Perfect for special occasions or everyday elegance. Available in adjustable sizes.",
                 price: 599, // Default price for rings
+                originalPrice: 1099,
                 category: "rings",
                 images: [`/rings/ring${i}.jpg`],
                 stock: 30,
