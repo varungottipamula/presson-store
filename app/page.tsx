@@ -12,8 +12,7 @@ async function getBestSellers() {
       $match: {
         category: 'nails',
         price: { $gt: 0 },
-        images: { $exists: true, $type: 'array', $ne: [] },
-        'images.0': { $exists: true, $ne: null, $ne: "" }
+        images: { $exists: true, $type: 'array', $ne: [], $elemMatch: { $ne: "" } }
       }
     },
     { $sample: { size: 12 } }
@@ -37,8 +36,7 @@ async function getCollectionProducts() {
       $match: {
         category: { $nin: ['nails', 'earrings'] },
         price: { $gt: 0 },
-        images: { $exists: true, $type: 'array', $ne: [] },
-        'images.0': { $exists: true, $ne: null, $ne: "" }
+        images: { $exists: true, $type: 'array', $ne: [], $elemMatch: { $ne: "" } }
       }
     },
     { $sample: { size: 12 } }
