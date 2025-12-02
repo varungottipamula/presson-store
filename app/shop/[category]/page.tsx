@@ -27,15 +27,16 @@ export default async function ShopCategoryPage({ params }: ShopCategoryPageProps
     let products;
     const baseFilter = {
         price: { $gt: 0 },
-        images: { $exists: true, $not: { $size: 0 } }
+        stock: { $gt: 0 },
+        images: { $exists: true, $type: 'array', $ne: [], $elemMatch: { $ne: "" } }
     };
 
     if (category === 'new-arrivals') {
-        products = await Product.find({ ...baseFilter }).sort({ createdAt: -1 }).limit(20);
+        products = await Product.find({ ...baseFilter } as any).sort({ createdAt: -1 }).limit(20);
     } else if (category === 'accessories') {
-        products = await Product.find({ ...baseFilter, category: { $ne: 'nails' } }).sort({ createdAt: -1 });
+        products = await Product.find({ ...baseFilter, category: { $ne: 'nails' } } as any).sort({ createdAt: -1 });
     } else {
-        products = await Product.find({ ...baseFilter, category }).sort({ createdAt: -1 });
+        products = await Product.find({ ...baseFilter, category } as any).sort({ createdAt: -1 });
     }
 
     // Serialize Mongoose documents to plain objects
@@ -48,7 +49,7 @@ export default async function ShopCategoryPage({ params }: ShopCategoryPageProps
     });
 
     // Format category name for display
-    const categoryName = category
+    const categoryName = category === 'nails' ? 'Press on Nails' : category
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
@@ -92,7 +93,7 @@ export default async function ShopCategoryPage({ params }: ShopCategoryPageProps
                                     </div>
                                     <div className="p-5 text-center">
                                         <p className="text-xs text-rose-500 font-semibold mb-1 uppercase tracking-wider">
-                                            {product.category}
+                                            {product.category === 'nails' ? 'Press on Nails' : product.category}
                                         </p>
                                         <h3 className="font-bold text-gray-900 mb-2 text-base line-clamp-2">
                                             {product.name}
