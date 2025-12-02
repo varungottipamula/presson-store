@@ -5,7 +5,11 @@ import ProductImage from '@/components/ProductImage';
 
 export default async function AllProductsPage() {
     await dbConnect();
-    const products = (await Product.find({}).sort({ createdAt: -1 })) || [];
+    const products = (await Product.find({
+        stock: { $gt: 0 },
+        price: { $gt: 0 },
+        images: { $exists: true, $type: 'array', $ne: [], $elemMatch: { $ne: "" } }
+    } as any).sort({ createdAt: -1 })) || [];
 
     // Serialize Mongoose documents to plain objects
     const serializedProducts = products.map((doc) => {
@@ -62,7 +66,7 @@ export default async function AllProductsPage() {
                                         </div>
                                         <div className="p-5 text-center">
                                             <p className="text-xs text-rose-500 font-semibold mb-1 uppercase tracking-wider">
-                                                {product.category}
+                                                {product.category === 'nails' ? 'Press on Nails' : product.category}
                                             </p>
                                             <h3 className="font-bold text-gray-900 mb-2 text-base line-clamp-2">
                                                 {product.name}
