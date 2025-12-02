@@ -153,15 +153,15 @@ export default async function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+            <div className="flex overflow-x-auto snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-7xl mx-auto pb-6 sm:pb-0 scrollbar-hide">
               {bestSellers.map((product: any) => (
                 <Link
                   key={product._id.toString()}
                   href={`/product/${product._id.toString()}`}
-                  className="group"
+                  className="group min-w-[260px] sm:min-w-0 snap-center"
                 >
-                  <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
-                    <div className="aspect-square bg-gradient-to-br from-pink-50 to-rose-50 relative overflow-hidden">
+                  <div className="bg-white rounded-[2rem] sm:rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
+                    <div className="aspect-[4/5] sm:aspect-square bg-gradient-to-br from-pink-50 to-rose-50 relative overflow-hidden">
                       <ProductImage
                         src={product.images?.[0]}
                         alt={product.name}
@@ -219,15 +219,15 @@ export default async function Home() {
             <p className="text-gray-600 text-lg">Explore our curated collections</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          <div className="flex overflow-x-auto snap-x snap-mandatory sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 max-w-7xl mx-auto pb-6 sm:pb-0 scrollbar-hide">
             {collectionProducts.map((product: any) => (
               <Link
                 key={product._id.toString()}
                 href={`/product/${product._id.toString()}`}
-                className="group"
+                className="group min-w-[260px] sm:min-w-0 snap-center"
               >
-                <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
-                  <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
+                <div className="bg-white rounded-[2rem] sm:rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100">
+                  <div className="aspect-[4/5] sm:aspect-square bg-gradient-to-br from-gray-50 to-gray-100 relative overflow-hidden">
                     <ProductImage
                       src={product.images?.[0]}
                       alt={product.name}
