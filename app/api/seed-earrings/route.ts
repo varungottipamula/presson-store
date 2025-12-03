@@ -8,15 +8,15 @@ export async function GET() {
 
         const products = [];
 
-        // Generate 2 earring products
-        for (let i = 1; i <= 2; i++) {
+        // Generate 13 earring products
+        for (let i = 1; i <= 13; i++) {
             const product = {
                 name: `Beautiful Earrings Style ${i}`,
                 description: "Gorgeous earrings with stunning design. Perfect for adding sparkle to any look. Lightweight and comfortable for all-day wear.",
                 price: 699, // Default price for earrings
                 originalPrice: 1199,
                 category: "earrings",
-                images: [`/earrings/earring${i}.jpg`],
+                images: [`/earrings/earing${i}.jpg`],
                 stock: 25,
                 sizes: ["One Size"],
                 shapes: [],

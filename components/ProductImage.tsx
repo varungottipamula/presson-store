@@ -15,14 +15,19 @@ interface ProductImageProps {
 export default function ProductImage({ src, alt, className, fill, width, height }: ProductImageProps) {
     const [error, setError] = useState(false);
 
-    // Use the provided src, or fallback to logo if error occurred or src is empty
-    const imageSrc = error || !src ? '/logo.png' : src;
+    // If error or no src, show a placeholder
+    if (error || !src) {
+        return (
+            <div className={`${className} bg-gray-100 flex items-center justify-center`}>
+                <div className="text-gray-400 text-sm">No Image</div>
+            </div>
+        );
+    }
 
-    // If it's a regular img tag (for external URLs without next/image config)
-    // We use regular img tag to avoid "hostname not configured" errors for random URLs
+    // Use regular img tag to avoid "hostname not configured" errors for external URLs
     return (
         <img
-            src={imageSrc}
+            src={src}
             alt={alt}
             className={className}
             onError={() => setError(true)}

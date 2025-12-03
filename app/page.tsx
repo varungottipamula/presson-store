@@ -97,6 +97,11 @@ export default async function Home() {
       image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&q=80&w=400',
     },
     {
+      name: 'Earrings',
+      slug: 'earrings',
+      image: '/earrings/earing1.jpg',
+    },
+    {
       name: 'Glasses',
       slug: 'glasses',
       image: 'https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&q=80&w=400',

@@ -2,61 +2,119 @@ import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 
-export async function POST() {
+export async function GET() {
     try {
         await dbConnect();
 
-        const earringsUpdates = [
+        const earringUpdates = [
             {
-                name: 'Crystal floral drop earrings',
-                description: 'Elegant gold earrings featuring a sparkling crystal-studded circle with a curved rhinestone arc.'
+                name: "Golden Petal Blossom Earrings",
+                description: "Elegant gold-tone floral earrings with textured petals, perfect for a statement yet classy look.",
+                image: "/earrings/earing1.jpg"
             },
             {
-                name: 'Pearl rose earrings',
-                description: 'Gold drop earrings with pearl studs and a tiny purple rose encased in a glossy, irregular gold frame.'
+                name: "Pearl Bow Charm Set",
+                description: "Delicate bow-accent earrings paired with pearls and crystals, offering a sweet and feminine touch.",
+                image: "/earrings/earing2.jpg"
+            },
+            {
+                name: "Vintage Textured Hoop Studs",
+                description: "Chunky gold textured hoops that add a bold, retro-inspired elegance to any outfit.",
+                image: "/earrings/earing3.jpg"
+            },
+            {
+                name: "Curved Ripple Hoop Earrings",
+                description: "Sculpted gold hoops featuring a wave-like ripple design for a modern, luxurious finish.",
+                image: "/earrings/earing4.jpg"
+            },
+            {
+                name: "Pearl & Gold Mixed Earring Set",
+                description: "A versatile multi-piece set combining pearls, crystals, and gold hoops—ideal for mix-and-match styling.",
+                image: "/earrings/earing5.jpg"
+            },
+            {
+                name: "Ocean Star Glam Studs",
+                description: "Coastal-themed gold studs with shells, pearls, and blue crystals, capturing a seaside sparkle.",
+                image: "/earrings/earing6.jpg"
+            },
+            {
+                name: "Elegant Pearl & Leaf Mini Set",
+                description: "A chic set of pearl and metallic leaf earrings designed for a soft, graceful everyday look.",
+                image: "/earrings/earing7.jpg"
+            },
+            {
+                name: "Luxe Square Pearl & Crystal Studs",
+                description: "Square-shaped gold studs featuring either a pearl or crystal finish, offering a refined, classy vibe.",
+                image: "/earrings/earing8.jpg"
+            },
+            {
+                name: "Bow Glamour Earring Trio",
+                description: "A trio of bow-inspired earrings with pearls and crystals, blending playful charm with elegance.",
+                image: "/earrings/earing9.jpg"
+            },
+            {
+                name: "Molten Gold Drop Earrings",
+                description: "Smooth, organic-shaped gold drops with a liquid-metal effect, perfect for bold, artistic style.",
+                image: "/earrings/earing10.jpg"
+            },
+            {
+                name: "Classic Chunky Gold Hoop Earrings",
+                description: "Timeless chunky gold hoops with a smooth, rounded design—perfect for elevating everyday outfits.",
+                image: "/earrings/earing11.jpg"
+            },
+            {
+                name: "Luxe Gold Statement Earring Set",
+                description: "A bold collection of sculpted gold earrings featuring geometric, dome, and textured shapes for standout styling.",
+                image: "/earrings/earing12.jpg"
+            },
+            {
+                name: "Premium Mixed Gold Hoop Set",
+                description: "A versatile multi-pair gold hoop set, including textured, pearl-accented, and classic designs to match any look.",
+                image: "/earrings/earing13.jpg"
             }
         ];
 
-        // Get all earrings products sorted by creation date (oldest first)
-        const earrings = await Product.find({ category: 'earrings' }).sort({ createdAt: 1 });
+        // Get all earring products sorted by image path to match them correctly
+        const earringProducts = await Product.find({ category: 'earrings' }).sort({ images: 1 });
 
-        if (earrings.length < earringsUpdates.length) {
+        if (earringProducts.length !== 13) {
             return NextResponse.json({
                 success: false,
-                message: `Only found ${earrings.length} earrings products, but need ${earringsUpdates.length}`
+                message: `Expected 13 earring products, found ${earringProducts.length}`
             }, { status: 400 });
         }
 
-        const updatePromises = earrings.slice(0, earringsUpdates.length).map((earring, index) => {
+        // Update each product
+        const updatePromises = earringProducts.map((product, index) => {
             return Product.findByIdAndUpdate(
-                earring._id,
+                product._id,
                 {
-                    name: earringsUpdates[index].name,
-                    description: earringsUpdates[index].description
+                    name: earringUpdates[index].name,
+                    description: earringUpdates[index].description
                 },
                 { new: true }
             );
         });
 
-        const updatedEarrings = await Promise.all(updatePromises);
-
-        const validEarrings = updatedEarrings.filter((e): e is NonNullable<typeof e> => e !== null);
+        const updatedProducts = await Promise.all(updatePromises);
 
         return NextResponse.json({
             success: true,
-            message: `Successfully updated ${validEarrings.length} earrings products`,
-            updatedProducts: validEarrings.map(e => ({ id: e._id, name: e.name }))
+            message: `Successfully updated ${updatedProducts.length} earring products`,
+            products: updatedProducts.map(p => ({
+                id: p._id,
+                name: p.name,
+                description: p.description,
+                image: p.images[0]
+            }))
         });
 
     } catch (error) {
-        console.error('Error updating earrings:', error);
-        return NextResponse.json(
-            {
-                success: false,
-                message: 'Failed to update earrings',
-                error: error instanceof Error ? error.message : 'Unknown error'
-            },
-            { status: 500 }
-        );
+        console.error('Update error:', error);
+        return NextResponse.json({
+            success: false,
+            message: 'Error updating products',
+            error: error instanceof Error ? error.message : 'Unknown error'
+        }, { status: 500 });
     }
 }
