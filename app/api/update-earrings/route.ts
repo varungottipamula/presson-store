@@ -101,12 +101,15 @@ export async function GET() {
         return NextResponse.json({
             success: true,
             message: `Successfully updated ${updatedProducts.length} earring products`,
-            products: updatedProducts.map(p => ({
-                id: p._id,
-                name: p.name,
-                description: p.description,
-                image: p.images[0]
-            }))
+            products: updatedProducts.map(p => {
+                if (!p) return null;
+                return {
+                    id: p._id,
+                    name: p.name,
+                    description: p.description,
+                    image: p.images && p.images.length > 0 ? p.images[0] : null
+                };
+            }).filter(Boolean)
         });
 
     } catch (error) {
