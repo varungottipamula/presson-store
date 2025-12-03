@@ -4,6 +4,8 @@ import { ArrowRight, Package, Check, Shield } from 'lucide-react';
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 
+export const dynamic = 'force-dynamic';
+
 async function getBestSellers() {
   await dbConnect();
   // Get random products from nails category only, ensuring valid price and images
