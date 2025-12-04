@@ -3,6 +3,8 @@ import Product from '@/models/Product';
 import Link from 'next/link';
 import ProductImage from '@/components/ProductImage';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AllProductsPage() {
     await dbConnect();
     const products = (await Product.find({

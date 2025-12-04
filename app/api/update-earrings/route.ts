@@ -124,6 +124,8 @@ export async function GET() {
             }
         }
 
+        revalidatePath('/');
+        revalidatePath('/shop');
         revalidatePath('/shop/earrings');
         revalidatePath('/shop/[category]');
 
