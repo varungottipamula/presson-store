@@ -10,67 +10,93 @@ export async function GET() {
             {
                 name: "Golden Petal Blossom Earrings",
                 description: "Elegant gold-tone floral earrings with textured petals, perfect for a statement yet classy look.",
-                image: "/earrings/earing1.jpg"
+                image: "/earrings/earing1.jpg",
+                price: 699,
+                originalPrice: 1199
             },
             {
                 name: "Pearl Bow Charm Set",
                 description: "Delicate bow-accent earrings paired with pearls and crystals, offering a sweet and feminine touch.",
-                image: "/earrings/earing2.jpg"
+                image: "/earrings/earing2.jpg",
+                price: 250,
+                originalPrice: 1199
             },
             {
                 name: "Vintage Textured Hoop Studs",
                 description: "Chunky gold textured hoops that add a bold, retro-inspired elegance to any outfit.",
-                image: "/earrings/earing3.jpg"
+                image: "/earrings/earing3.jpg",
+                price: 300,
+                originalPrice: 1199
             },
             {
                 name: "Curved Ripple Hoop Earrings",
                 description: "Sculpted gold hoops featuring a wave-like ripple design for a modern, luxurious finish.",
-                image: "/earrings/earing4.jpg"
+                image: "/earrings/earing4.jpg",
+                price: 699,
+                originalPrice: 1199
             },
             {
                 name: "Pearl & Gold Mixed Earring Set",
                 description: "A versatile multi-piece set combining pearls, crystals, and gold hoops—ideal for mix-and-match styling.",
-                image: "/earrings/earing5.jpg"
+                image: "/earrings/earing5.jpg",
+                price: 450,
+                originalPrice: 1199
             },
             {
                 name: "Ocean Star Glam Studs",
                 description: "Coastal-themed gold studs with shells, pearls, and blue crystals, capturing a seaside sparkle.",
-                image: "/earrings/earing6.jpg"
+                image: "/earrings/earing6.jpg",
+                price: 699,
+                originalPrice: 1199
             },
             {
                 name: "Elegant Pearl & Leaf Mini Set",
                 description: "A chic set of pearl and metallic leaf earrings designed for a soft, graceful everyday look.",
-                image: "/earrings/earing7.jpg"
+                image: "/earrings/earing7.jpg",
+                price: 699,
+                originalPrice: 1199
             },
             {
                 name: "Luxe Square Pearl & Crystal Studs",
                 description: "Square-shaped gold studs featuring either a pearl or crystal finish, offering a refined, classy vibe.",
-                image: "/earrings/earing8.jpg"
+                image: "/earrings/earing8.jpg",
+                price: 699,
+                originalPrice: 1199
             },
             {
                 name: "Bow Glamour Earring Trio",
                 description: "A trio of bow-inspired earrings with pearls and crystals, blending playful charm with elegance.",
-                image: "/earrings/earing9.jpg"
+                image: "/earrings/earing9.jpg",
+                price: 699,
+                originalPrice: 1199
             },
             {
                 name: "Molten Gold Drop Earrings",
                 description: "Smooth, organic-shaped gold drops with a liquid-metal effect, perfect for bold, artistic style.",
-                image: "/earrings/earing10.jpg"
+                image: "/earrings/earing10.jpg",
+                price: 699,
+                originalPrice: 1199
             },
             {
                 name: "Classic Chunky Gold Hoop Earrings",
                 description: "Timeless chunky gold hoops with a smooth, rounded design—perfect for elevating everyday outfits.",
-                image: "/earrings/earing11.jpg"
+                image: "/earrings/earing11.jpg",
+                price: 699,
+                originalPrice: 1199
             },
             {
                 name: "Luxe Gold Statement Earring Set",
                 description: "A bold collection of sculpted gold earrings featuring geometric, dome, and textured shapes for standout styling.",
-                image: "/earrings/earing12.jpg"
+                image: "/earrings/earing12.jpg",
+                price: 699,
+                originalPrice: 1199
             },
             {
                 name: "Premium Mixed Gold Hoop Set",
                 description: "A versatile multi-pair gold hoop set, including textured, pearl-accented, and classic designs to match any look.",
-                image: "/earrings/earing13.jpg"
+                image: "/earrings/earing13.jpg",
+                price: 699,
+                originalPrice: 1199
             }
         ];
 
@@ -90,7 +116,9 @@ export async function GET() {
                 product._id,
                 {
                     name: earringUpdates[index].name,
-                    description: earringUpdates[index].description
+                    description: earringUpdates[index].description,
+                    price: earringUpdates[index].price,
+                    originalPrice: earringUpdates[index].originalPrice
                 },
                 { new: true }
             );
@@ -107,6 +135,8 @@ export async function GET() {
                     id: p._id,
                     name: p.name,
                     description: p.description,
+                    price: p.price,
+                    originalPrice: p.originalPrice,
                     image: p.images && p.images.length > 0 ? p.images[0] : null
                 };
             }).filter(Boolean)
