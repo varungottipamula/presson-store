@@ -4,6 +4,8 @@ import Product from '@/models/Product';
 import Link from 'next/link';
 import ProductImage from '@/components/ProductImage';
 
+export const dynamic = 'force-dynamic';
+
 interface ShopCategoryPageProps {
     params: Promise<{
         category: string;

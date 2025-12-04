@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
+import { revalidatePath } from 'next/cache';
 
 export async function GET() {
     try {
@@ -122,6 +123,9 @@ export async function GET() {
                 updatedProducts.push(product);
             }
         }
+
+        revalidatePath('/shop/earrings');
+        revalidatePath('/shop/[category]');
 
         return NextResponse.json({
             success: true,
