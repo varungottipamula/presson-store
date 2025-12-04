@@ -100,46 +100,38 @@ export async function GET() {
             }
         ];
 
-        // Get all earring products sorted by image path to match them correctly
-        const earringProducts = await Product.find({ category: 'earrings' }).sort({ images: 1 });
+        const updatedProducts = [];
 
-        if (earringProducts.length !== 13) {
-            return NextResponse.json({
-                success: false,
-                message: `Expected 13 earring products, found ${earringProducts.length}`
-            }, { status: 400 });
-        }
-
-        // Update each product
-        const updatePromises = earringProducts.map((product, index) => {
-            return Product.findByIdAndUpdate(
-                product._id,
+        // Update each product by finding it via image
+        for (const update of earringUpdates) {
+            const product = await Product.findOneAndUpdate(
                 {
-                    name: earringUpdates[index].name,
-                    description: earringUpdates[index].description,
-                    price: earringUpdates[index].price,
-                    originalPrice: earringUpdates[index].originalPrice
+                    category: 'earrings',
+                    images: update.image
+                },
+                {
+                    name: update.name,
+                    description: update.description,
+                    price: update.price,
+                    originalPrice: update.originalPrice
                 },
                 { new: true }
             );
-        });
 
-        const updatedProducts = await Promise.all(updatePromises);
+            if (product) {
+                updatedProducts.push(product);
+            }
+        }
 
         return NextResponse.json({
             success: true,
             message: `Successfully updated ${updatedProducts.length} earring products`,
-            products: updatedProducts.map(p => {
-                if (!p) return null;
-                return {
-                    id: p._id,
-                    name: p.name,
-                    description: p.description,
-                    price: p.price,
-                    originalPrice: p.originalPrice,
-                    image: p.images && p.images.length > 0 ? p.images[0] : null
-                };
-            }).filter(Boolean)
+            products: updatedProducts.map(p => ({
+                id: p._id,
+                name: p.name,
+                price: p.price,
+                image: p.images[0]
+            }))
         });
 
     } catch (error) {
