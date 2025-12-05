@@ -13,8 +13,8 @@ export async function PATCH(
         const { status, paymentStatus } = await req.json();
         const { id } = await params;
 
-        // If status is delivered, delete the order instead of updating
-        if (status === 'delivered') {
+        // If status is delivered or cancelled, delete the order instead of updating
+        if (status === 'delivered' || status === 'cancelled') {
             const deletedOrder = await Order.findByIdAndDelete(id);
 
             if (!deletedOrder) {
@@ -24,9 +24,13 @@ export async function PATCH(
                 );
             }
 
+            const message = status === 'delivered'
+                ? 'Order delivered and removed'
+                : 'Order cancelled and removed';
+
             return NextResponse.json({
                 success: true,
-                message: 'Order delivered and removed',
+                message,
                 deleted: true,
             });
         }

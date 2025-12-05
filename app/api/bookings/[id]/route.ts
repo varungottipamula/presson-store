@@ -14,8 +14,8 @@ export async function PATCH(
 
         console.log('Updating booking:', id, 'to status:', status);
 
-        // If status is completed, delete the booking instead of updating
-        if (status === 'completed') {
+        // If status is completed or cancelled, delete the booking instead of updating
+        if (status === 'completed' || status === 'cancelled') {
             const deletedBooking = await Booking.findByIdAndDelete(id);
 
             if (!deletedBooking) {
@@ -26,11 +26,15 @@ export async function PATCH(
                 );
             }
 
-            console.log('Booking completed and removed:', deletedBooking._id);
+            const message = status === 'completed'
+                ? 'Booking completed and removed'
+                : 'Booking cancelled and removed';
+
+            console.log(message + ':', deletedBooking._id);
 
             return NextResponse.json({
                 success: true,
-                message: 'Booking completed and removed',
+                message,
                 deleted: true,
             });
         }
