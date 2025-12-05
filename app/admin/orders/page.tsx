@@ -57,6 +57,10 @@ export default function AdminOrdersPage() {
             });
             const data = await res.json();
             if (data.success) {
+                if (data.deleted) {
+                    // Order was delivered and removed
+                    alert('Order marked as delivered and removed from the list!');
+                }
                 fetchOrders();
             }
         } catch (error) {

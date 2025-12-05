@@ -46,6 +46,10 @@ export default function AdminBookingsPage() {
             });
             const data = await res.json();
             if (data.success) {
+                if (data.deleted) {
+                    // Booking was completed and removed
+                    alert('Booking marked as completed and removed from the list!');
+                }
                 fetchBookings();
             }
         } catch (error) {

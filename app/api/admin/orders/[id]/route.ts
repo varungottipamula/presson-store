@@ -13,6 +13,24 @@ export async function PATCH(
         const { status, paymentStatus } = await req.json();
         const { id } = await params;
 
+        // If status is delivered, delete the order instead of updating
+        if (status === 'delivered') {
+            const deletedOrder = await Order.findByIdAndDelete(id);
+
+            if (!deletedOrder) {
+                return NextResponse.json(
+                    { success: false, message: 'Order not found' },
+                    { status: 404 }
+                );
+            }
+
+            return NextResponse.json({
+                success: true,
+                message: 'Order delivered and removed',
+                deleted: true,
+            });
+        }
+
         const updateData: Record<string, string> = {};
         if (status) updateData.status = status;
         if (paymentStatus) updateData['paymentInfo.status'] = paymentStatus;

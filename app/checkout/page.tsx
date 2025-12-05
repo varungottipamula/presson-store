@@ -100,43 +100,48 @@ export default function CheckoutPage() {
                 order_id: orderData.orderId,
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 handler: async function (response: any) {
-                    // Verify payment
-                    const verifyRes = await fetch('/api/payment/verify', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature,
-                            orderData: {
-                                user: {
-                                    name: formData.name,
-                                    email: formData.email,
-                                    phone: formData.phone,
-                                    address: `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
+                    try {
+                        // Verify payment
+                        const verifyRes = await fetch('/api/payment/verify', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature,
+                                orderData: {
+                                    user: {
+                                        name: formData.name,
+                                        email: formData.email,
+                                        phone: formData.phone,
+                                        address: `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
+                                    },
+                                    products: cart.map(item => ({
+                                        product: item.id,
+                                        name: item.name,
+                                        quantity: item.quantity,
+                                        price: item.price,
+                                        size: item.size,
+                                    })),
+                                    totalAmount: finalTotal,
+                                    discount: discountAmount,
+                                    shipping: shippingCost
                                 },
-                                products: cart.map(item => ({
-                                    product: item.id,
-                                    name: item.name,
-                                    quantity: item.quantity,
-                                    price: item.price,
-                                    size: item.size,
-                                })),
-                                totalAmount: finalTotal,
-                                discount: discountAmount,
-                                shipping: shippingCost
-                            },
-                        }),
-                    });
+                            }),
+                        });
 
-                    const verifyData = await verifyRes.json();
+                        const verifyData = await verifyRes.json();
 
-                    if (verifyData.success) {
-                        clearCart();
-                        alert('Payment successful! Your order has been placed.');
-                        router.push('/');
-                    } else {
-                        alert('Payment verification failed');
+                        if (verifyData.success) {
+                            clearCart();
+                            alert('Payment successful! Your order has been placed.');
+                            router.push('/');
+                        } else {
+                            alert('Payment verification failed: ' + (verifyData.message || 'Unknown error'));
+                        }
+                    } catch (error) {
+                        console.error('Payment verification error:', error);
+                        alert('Payment verification failed. Please contact support with your payment details.');
                     }
                     setLoading(false);
                 },
@@ -148,9 +153,37 @@ export default function CheckoutPage() {
                 theme: {
                     color: '#ec4899',
                 },
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                modal: {
+                    ondismiss: function () {
+                        console.log('Payment modal closed by user');
+                        setLoading(false);
+                        alert('Payment cancelled. You can try again when ready.');
+                    },
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    onerror: function (error: any) {
+                        console.error('Razorpay modal error:', error);
+                        setLoading(false);
+                        alert('Payment failed: ' + (error.description || error.reason || 'Unknown error'));
+                    }
+                }
             };
 
+            console.log('🚀 Opening Razorpay with config:', {
+                key: options.key,
+                amount: options.amount,
+                currency: options.currency,
+                order_id: options.order_id,
+            });
+
             const razorpay = new window.Razorpay(options);
+
+            razorpay.on('payment.failed', function (response: { error: { code: string; description: string; reason: string; metadata: { order_id: string; payment_id: string } } }) {
+                console.error('❌ Payment failed:', response.error);
+                alert(`Payment failed: ${response.error.description}\nReason: ${response.error.reason}`);
+                setLoading(false);
+            });
+
             razorpay.open();
         } catch (error) {
             console.error('Payment error:', error);

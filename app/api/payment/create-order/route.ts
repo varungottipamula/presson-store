@@ -7,9 +7,16 @@ export async function POST(req: NextRequest) {
 
         // Initialize Razorpay with test credentials
         // User should replace these with their actual Razorpay credentials
+        const key_id = process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID;
+        const key_secret = process.env.RAZORPAY_KEY_SECRET;
+
+        console.log("DEBUG: Loading Razorpay Keys...");
+        console.log("DEBUG: Key ID:", key_id ? key_id.slice(0, 5) + "..." : "MISSING");
+        console.log("DEBUG: Key Secret:", key_secret ? key_secret.slice(0, 5) + "..." : "MISSING");
+
         const razorpay = new Razorpay({
-            key_id: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_xxxxxxxxxxxxxxxx',
-            key_secret: process.env.RAZORPAY_KEY_SECRET || 'your_secret_key_here',
+            key_id: key_id || 'rzp_test_xxxxxxxxxxxxxxxx',
+            key_secret: key_secret || 'your_secret_key_here',
         });
 
         const options = {

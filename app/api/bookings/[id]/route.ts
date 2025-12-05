@@ -14,6 +14,27 @@ export async function PATCH(
 
         console.log('Updating booking:', id, 'to status:', status);
 
+        // If status is completed, delete the booking instead of updating
+        if (status === 'completed') {
+            const deletedBooking = await Booking.findByIdAndDelete(id);
+
+            if (!deletedBooking) {
+                console.log('Booking not found:', id);
+                return NextResponse.json(
+                    { success: false, message: 'Booking not found' },
+                    { status: 404 }
+                );
+            }
+
+            console.log('Booking completed and removed:', deletedBooking._id);
+
+            return NextResponse.json({
+                success: true,
+                message: 'Booking completed and removed',
+                deleted: true,
+            });
+        }
+
         const booking = await Booking.findByIdAndUpdate(
             id,
             { status },
