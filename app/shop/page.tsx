@@ -2,8 +2,19 @@ import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 import Link from 'next/link';
 import ProductImage from '@/components/ProductImage';
+import { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
+
+export const metadata: Metadata = {
+    title: 'Shop All Products',
+    description: 'Browse our complete collection of premium press-on nails, bags, watches, jewelry, and fashion accessories. Find your perfect style at Jerry Glam Store.',
+    openGraph: {
+        title: 'Shop All Products | Jerry Glam Store',
+        description: 'Browse our complete collection of premium press-on nails and fashion accessories.',
+        type: 'website',
+    },
+};
 
 export default async function AllProductsPage() {
     await dbConnect();

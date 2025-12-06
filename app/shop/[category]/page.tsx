@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { Metadata } from 'next';
 import dbConnect from '@/lib/db';
 import Product from '@/models/Product';
 import Link from 'next/link';
@@ -10,6 +11,42 @@ interface ShopCategoryPageProps {
     params: Promise<{
         category: string;
     }>;
+}
+
+const categoryInfo: Record<string, { name: string; description: string }> = {
+    'nails': { name: 'Press on Nails', description: 'Discover our stunning collection of press-on nails. Easy to apply, long-lasting, and salon-perfect.' },
+    'bag': { name: 'Bags', description: 'Explore our stylish collection of bags and purses for every occasion.' },
+    'watch': { name: 'Watches', description: 'Shop elegant and fashionable watches to complement your style.' },
+    'bracelet': { name: 'Bracelets', description: 'Browse beautiful bracelets and bangles to add charm to your wrist.' },
+    'rings': { name: 'Rings', description: 'Find stunning rings perfect for any occasion or daily wear.' },
+    'necklace': { name: 'Necklaces', description: 'Discover elegant necklaces to enhance your beauty.' },
+    'earrings': { name: 'Earrings', description: 'Shop gorgeous earrings that make a statement.' },
+    'glasses': { name: 'Glasses', description: 'Explore trendy eyewear and sunglasses.' },
+    'phone-cover': { name: 'Phone Covers', description: 'Protect your phone with our stylish covers.' },
+    'hair-rubber': { name: 'Hair Rubber', description: 'Shop colorful and comfortable hair accessories.' },
+    'hairclip': { name: 'Hair Clips', description: 'Find beautiful hair clips and accessories.' },
+    'accessories': { name: 'Accessories', description: 'Browse all fashion accessories in one place.' },
+    'new-arrivals': { name: 'New Arrivals', description: 'Check out our latest products and collections.' },
+};
+
+export async function generateMetadata({ params }: ShopCategoryPageProps): Promise<Metadata> {
+    const { category } = await params;
+    const info = categoryInfo[category] || { name: category, description: `Shop ${category} at Jerry Glam Store` };
+
+    return {
+        title: info.name,
+        description: `${info.description} Shop premium ${info.name.toLowerCase()} at Jerry Glam Store with fast shipping.`,
+        openGraph: {
+            title: `${info.name} | Jerry Glam Store`,
+            description: info.description,
+            type: 'website',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: `${info.name} | Jerry Glam Store`,
+            description: info.description,
+        },
+    };
 }
 
 export default async function ShopCategoryPage({ params }: ShopCategoryPageProps) {
