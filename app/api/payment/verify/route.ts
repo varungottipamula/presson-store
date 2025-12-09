@@ -13,7 +13,17 @@ export async function POST(req: NextRequest) {
         } = await req.json();
 
         // Verify signature
-        const keySecret = process.env.RAZORPAY_KEY_SECRET || 'your_secret_key_here';
+        const keySecret = process.env.RAZORPAY_KEY_SECRET;
+
+        // CRITICAL SECURITY: Do not allow fallback to hardcoded string
+        if (!keySecret) {
+            console.error('RAZORPAY_KEY_SECRET is not defined in environment variables');
+            return NextResponse.json(
+                { success: false, message: 'Server configuration error' },
+                { status: 500 }
+            );
+        }
+
         const generated_signature = crypto
             .createHmac('sha256', keySecret)
             .update(`${razorpay_order_id}|${razorpay_payment_id}`)
