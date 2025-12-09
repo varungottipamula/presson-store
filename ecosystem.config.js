@@ -11,7 +11,9 @@ module.exports = {
             // Restart authentication
             max_restarts: 10,
             restart_delay: 4000,
-            time: true
+            time: true,
+            // Safety: Restart if app uses too much memory (leak protection)
+            max_memory_restart: '2G'
         },
     ],
 };
