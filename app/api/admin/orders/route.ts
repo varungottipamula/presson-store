@@ -6,8 +6,10 @@ export async function GET() {
     try {
         await dbConnect();
 
-        // Fetch all orders, sorted by most recent first
-        const orders = await Order.find({}).sort({ createdAt: -1 });
+        // Fetch all orders, sorted by most recent first, with product images populated
+        const orders = await Order.find({})
+            .populate('products.product', 'images')
+            .sort({ createdAt: -1 });
 
         return NextResponse.json({
             success: true,

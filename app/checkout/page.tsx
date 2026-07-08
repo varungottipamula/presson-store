@@ -122,6 +122,7 @@ export default function CheckoutPage() {
                                         quantity: item.quantity,
                                         price: item.price,
                                         size: item.size,
+                                        image: item.image,
                                     })),
                                     totalAmount: finalTotal,
                                     discount: discountAmount,

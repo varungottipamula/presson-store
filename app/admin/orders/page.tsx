@@ -15,6 +15,12 @@ interface Order {
         name: string;
         quantity: number;
         price: number;
+        image?: string;
+        size?: string;
+        shape?: string;
+        product?: {
+            images?: string[];
+        };
     }>;
     totalAmount: number;
     status: string;
@@ -92,6 +98,7 @@ export default function AdminOrdersPage() {
                             <tr>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order ID</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Products</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payment</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
@@ -106,6 +113,37 @@ export default function AdminOrdersPage() {
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm font-medium text-gray-900">{order.user.name}</div>
                                         <div className="text-sm text-gray-500">{order.user.email}</div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex flex-col gap-2 max-w-xs">
+                                            {order.products.map((item, idx) => (
+                                                <div key={idx} className="flex items-center gap-2">
+                                                    {(() => {
+                                                        const src = item.image || item.product?.images?.[0];
+                                                        return src ? (
+                                                            /* eslint-disable-next-line @next/next/no-img-element */
+                                                            <img
+                                                                src={src}
+                                                                alt={item.name}
+                                                                className="w-10 h-10 object-cover rounded border flex-shrink-0"
+                                                            />
+                                                        ) : (
+                                                            <div className="w-10 h-10 bg-gray-100 rounded border flex items-center justify-center text-[10px] text-gray-400 flex-shrink-0">
+                                                                No Img
+                                                            </div>
+                                                        );
+                                                    })()}
+                                                    <div className="text-xs">
+                                                        <p className="font-semibold text-gray-900 line-clamp-1">{item.name}</p>
+                                                        <div className="text-gray-500">
+                                                            Qty: {item.quantity} | ₹{item.price}
+                                                            {item.size ? ` | Sz: ${item.size}` : ''}
+                                                            {item.shape ? ` | Sh: ${item.shape}` : ''}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">₹{order.totalAmount}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm">{order.paymentInfo?.method?.toUpperCase() || 'N/A'}</td>
@@ -127,7 +165,17 @@ export default function AdminOrdersPage() {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm space-y-2">
                                         <button
-                                            onClick={() => alert(`Order Details:\nOrder ID: ${order._id}\nCustomer: ${order.user.name}\nEmail: ${order.user.email}\nPhone: ${order.user.phone}\nAddress: ${order.user.address}\nTotal: ₹${order.totalAmount}\nStatus: ${order.status}`)}
+                                            onClick={() => {
+                                                const productList = order.products
+                                                    .map(
+                                                        (item) =>
+                                                            `- ${item.name} (Qty: ${item.quantity}, Price: ₹${item.price}${item.size ? `, Size: ${item.size}` : ''}${item.shape ? `, Shape: ${item.shape}` : ''})`
+                                                    )
+                                                    .join('\n');
+                                                alert(
+                                                    `Order Details:\nOrder ID: ${order._id}\n\nCustomer Details:\nName: ${order.user.name}\nEmail: ${order.user.email}\nPhone: ${order.user.phone}\nAddress: ${order.user.address}\n\nProducts:\n${productList}\n\nSummary:\nTotal: ₹${order.totalAmount}\nStatus: ${order.status}`
+                                                );
+                                            }}
                                             className="text-blue-600 hover:text-blue-900 block"
                                         >
                                             View Details
