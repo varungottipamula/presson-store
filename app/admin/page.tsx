@@ -1,8 +1,8 @@
 // app/admin/page.tsx
-import { connectDB } from "@/lib/db";
-import { Product } from "@/models/Product";
-import { Booking } from "@/models/Booking";
-import { Order } from "@/models/Order";
+import connectDB from "@/lib/db";
+import Product from "@/models/Product";
+import Booking from "@/models/Booking";
+import Order from "@/models/Order";
 
 export const dynamic = "force-dynamic";
 
@@ -98,7 +98,7 @@ export default async function AdminPage() {
             const getProductImgUrl = (prodId: any) => {
               if (!prodId) return "";
               const match = products.find((p: any) => String(p._id) === String(prodId));
-              return match?.imageUrl || "";
+              return match?.images?.[0] || "";
             };
 
             return (
